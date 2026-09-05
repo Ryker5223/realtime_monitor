@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-5.3.8-dist/css/bootstrap.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    {% block content %}
+
+    {% endblock %}
+</div>
+
+
+{% block javascript %}
+    <script src="{% static 'plugins/jquery-3.7.1.min.js' %}"></script>
+{% endblock %}
+
+</body>
+</html>

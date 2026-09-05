@@ -1,0 +1,922 @@
+{% extends 'temple.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    /* =========================
+       Page
+       ========================= */
+
+    body {
+        margin: 0;
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(37, 99, 235, 0.12),
+                transparent 35%
+            ),
+            linear-gradient(
+                135deg,
+                #f8fafc,
+                #eef2f7
+            );
+
+        min-height: 100vh;
+        color: #0f172a;
+    }
+
+
+    .login-page {
+
+        min-height: calc(100vh - 20px);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 30px 20px;
+
+    }
+
+
+    /* =========================
+       Login Card
+       ========================= */
+
+    .login-card {
+
+        width: 100%;
+        max-width: 430px;
+
+        background: rgba(255, 255, 255, 0.95);
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 20px;
+
+        padding: 42px 38px;
+
+        box-shadow:
+            0 20px 50px rgba(15, 23, 42, 0.08);
+
+    }
+
+
+    /* =========================
+       Brand
+       ========================= */
+
+    .brand-area {
+
+        text-align: center;
+
+        margin-bottom: 34px;
+
+    }
+
+
+    .brand-icon {
+
+        width: 58px;
+        height: 58px;
+
+        margin: 0 auto 18px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 16px;
+
+        color: #ffffff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        box-shadow:
+            0 8px 20px rgba(37, 99, 235, 0.25);
+
+    }
+
+
+    .brand-icon svg {
+
+        width: 27px;
+        height: 27px;
+
+    }
+
+
+    .brand-title {
+
+        margin: 0;
+
+        font-size: 25px;
+        font-weight: 750;
+
+        color: #0f172a;
+
+        letter-spacing: -0.4px;
+
+    }
+
+
+    .brand-subtitle {
+
+        margin-top: 8px;
+
+        color: #64748b;
+
+        font-size: 13px;
+
+        line-height: 1.6;
+
+    }
+
+
+    /* =========================
+       Form
+       ========================= */
+
+    .form-group-custom {
+
+        margin-bottom: 20px;
+
+    }
+
+
+    .form-label-custom {
+
+        display: block;
+
+        margin-bottom: 8px;
+
+        color: #334155;
+
+        font-size: 13px;
+        font-weight: 650;
+
+    }
+
+
+    .input-wrapper {
+
+        position: relative;
+
+    }
+
+
+    .input-icon {
+
+        position: absolute;
+
+        left: 15px;
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        color: #94a3b8;
+
+        pointer-events: none;
+
+        z-index: 2;
+
+    }
+
+
+    .input-icon svg {
+
+        width: 18px;
+        height: 18px;
+
+    }
+
+
+    /*
+       Django form input styles
+    */
+
+    .login-card input[type="text"],
+    .login-card input[type="password"] {
+
+        width: 100%;
+        height: 50px;
+
+        padding:
+            0 45px 0 45px;
+
+        border:
+            1px solid #dbe3ee;
+
+        border-radius: 12px;
+
+        background: #f8fafc;
+
+        color: #0f172a;
+
+        font-size: 14px;
+
+        outline: none;
+
+        transition:
+            border-color 0.2s,
+            background 0.2s,
+            box-shadow 0.2s;
+
+    }
+
+
+    .login-card input::placeholder {
+
+        color: #94a3b8;
+
+    }
+
+
+    .login-card input:hover {
+
+        background: #ffffff;
+
+        border-color: #cbd5e1;
+
+    }
+
+
+    .login-card input:focus {
+
+        background: #ffffff;
+
+        border-color: #3b82f6;
+
+        box-shadow:
+            0 0 0 3px rgba(59, 130, 246, 0.10);
+
+    }
+
+
+    /* =========================
+       Password Button
+       ========================= */
+
+    .password-toggle {
+
+        position: absolute;
+
+        right: 13px;
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        border: none;
+
+        background: transparent;
+
+        color: #94a3b8;
+
+        padding: 4px;
+
+        cursor: pointer;
+
+    }
+
+
+    .password-toggle:hover {
+
+        color: #2563eb;
+
+    }
+
+
+    .password-toggle svg {
+
+        width: 18px;
+        height: 18px;
+
+    }
+
+
+    /* =========================
+       Login Options
+       ========================= */
+
+    .login-options {
+
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        margin:
+            2px 0 24px;
+
+        font-size: 12px;
+
+    }
+
+
+    .remember-box {
+
+        display: flex;
+        align-items: center;
+
+        gap: 7px;
+
+        color: #64748b;
+
+        cursor: pointer;
+
+    }
+
+
+    .remember-box input {
+
+        width: 15px;
+        height: 15px;
+
+        cursor: pointer;
+
+    }
+
+
+    /* =========================
+       Button
+       ========================= */
+
+    .login-btn {
+
+        width: 100%;
+        height: 50px;
+
+        border: none;
+
+        border-radius: 12px;
+
+        color: #ffffff;
+
+        font-size: 14px;
+        font-weight: 650;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        box-shadow:
+            0 7px 18px rgba(37, 99, 235, 0.20);
+
+        transition:
+            transform 0.2s,
+            box-shadow 0.2s;
+
+    }
+
+
+    .login-btn:hover {
+
+        transform:
+            translateY(-1px);
+
+        box-shadow:
+            0 10px 24px rgba(37, 99, 235, 0.26);
+
+    }
+
+
+    .login-btn:active {
+
+        transform:
+            translateY(0);
+
+    }
+
+
+    .login-btn:disabled {
+
+        opacity: 0.7;
+
+        cursor: not-allowed;
+
+    }
+
+
+    /* =========================
+       Error
+       ========================= */
+
+    .login-alert {
+
+        margin-bottom: 20px;
+
+        padding: 11px 13px;
+
+        background: #fef2f2;
+
+        border:
+            1px solid #fecaca;
+
+        border-radius: 10px;
+
+        color: #b91c1c;
+
+        font-size: 12px;
+
+    }
+
+
+    .field-error {
+
+        margin-top: 6px;
+
+        color: #dc2626;
+
+        font-size: 11px;
+
+    }
+
+
+    /* =========================
+       Bottom
+       ========================= */
+
+    .login-footer {
+
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        gap: 7px;
+
+        margin-top: 25px;
+
+        color: #94a3b8;
+
+        font-size: 11px;
+
+    }
+
+
+    .footer-dot {
+
+        width: 6px;
+        height: 6px;
+
+        border-radius: 50%;
+
+        background: #22c55e;
+
+    }
+
+
+    /* =========================
+       Responsive
+       ========================= */
+
+    @media (max-width: 576px) {
+
+        .login-page {
+
+            padding: 20px 14px;
+
+        }
+
+
+        .login-card {
+
+            padding: 35px 24px;
+
+            border-radius: 17px;
+
+        }
+
+
+        .brand-title {
+
+            font-size: 22px;
+
+        }
+
+    }
+
+</style>
+
+
+
+<div class="login-page">
+
+    <div class="login-card">
+
+
+        <!-- =========================
+             Brand
+             ========================= -->
+
+        <div class="brand-area">
+
+
+            <div class="brand-icon">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 16 16">
+
+                    <path
+                        d="M0 5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v.5l3.2-1.6A.5.5 0 0 1 15 4.35v7.3a.5.5 0 0 1-.8.4L11 10.5v.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5z"/>
+
+                </svg>
+
+            </div>
+
+
+            <h1 class="brand-title">
+                Video Monitoring
+            </h1>
+
+
+            <div class="brand-subtitle">
+                Sign in to access your monitoring dashboard
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =========================
+             Django Form Errors
+             ========================= -->
+
+        {% if form.non_field_errors %}
+
+            <div class="login-alert">
+
+                {% for error in form.non_field_errors %}
+
+                    {{ error }}
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- =========================
+             Login Form
+             ========================= -->
+
+        <form
+            method="post"
+            id="loginForm"
+            novalidate>
+
+
+            {% csrf_token %}
+
+
+
+            <!-- Username -->
+
+            <div class="form-group-custom">
+
+
+                <label class="form-label-custom">
+                    Username
+                </label>
+
+
+                <div class="input-wrapper">
+
+
+                    <span class="input-icon">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 16 16">
+
+                            <path
+                                d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+
+                        </svg>
+
+                    </span>
+
+
+                    {{ form.username }}
+
+
+                </div>
+
+
+                {% if form.name.errors %}
+
+                    {% for error in form.name.errors %}
+
+                        <div class="field-error">
+                            {{ error }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <!-- Password -->
+
+            <div class="form-group-custom">
+
+
+                <label class="form-label-custom">
+                    Password
+                </label>
+
+
+                <div class="input-wrapper">
+
+
+                    <span class="input-icon">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 16 16">
+
+                            <path
+                                d="M8 1a3 3 0 0 0-3 3v3H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-1V4a3 3 0 0 0-3-3zm2 6H6V4a2 2 0 1 1 4 0v3z"/>
+
+                        </svg>
+
+                    </span>
+
+
+                    {{ form.password }}
+
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        id="togglePassword"
+                        title="Show password">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 16 16">
+
+                            <path
+                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.1 13.1 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13.1 13.1 0 0 1 14.828 8a13.1 13.1 0 0 1-1.66 2.043C11.879 11.332 10.12 12.5 8 12.5s-3.879-1.168-5.168-2.457A13.1 13.1 0 0 1 1.172 8z"/>
+
+                            <path
+                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>
+
+                        </svg>
+
+                    </button>
+
+
+                </div>
+
+
+                {% if form.password.errors %}
+
+                    {% for error in form.password.errors %}
+
+                        <div class="field-error">
+                            {{ error }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <!-- Options -->
+
+            <div class="login-options">
+
+
+                <label class="remember-box">
+
+                    <input
+                        type="checkbox"
+                        name="remember">
+
+                    <span>
+                        Remember me
+                    </span>
+
+                </label>
+
+
+                <span class="text-secondary">
+                    Secure access
+                </span>
+
+
+            </div>
+
+
+
+            <!-- Sign In -->
+
+            <button
+                type="submit"
+                class="login-btn"
+                id="loginBtn">
+
+                <span id="loginBtnText">
+                    Sign In
+                </span>
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- =========================
+             Footer
+             ========================= -->
+
+        <div class="login-footer">
+
+            <span class="footer-dot"></span>
+
+            Monitoring System Online
+
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+
+{% block javascript %}
+
+<script>
+
+    $(function () {
+
+
+        /*
+         * Add placeholders
+         */
+
+        $("input[name='name']")
+            .attr(
+                "placeholder",
+                "Enter your username"
+            );
+
+
+        $("input[name='password']")
+            .attr(
+                "placeholder",
+                "Enter your password"
+            );
+
+
+        /*
+         * Focus username input
+         */
+
+        $("input[name='name']")
+            .focus();
+
+
+
+        /*
+         * Show / Hide password
+         */
+
+        $("#togglePassword").click(function () {
+
+
+            let passwordInput =
+                $("input[name='password']");
+
+
+            if (
+                passwordInput.attr("type")
+                === "password"
+            ) {
+
+
+                passwordInput.attr(
+                    "type",
+                    "text"
+                );
+
+
+                $(this).attr(
+                    "title",
+                    "Hide password"
+                );
+
+
+            } else {
+
+
+                passwordInput.attr(
+                    "type",
+                    "password"
+                );
+
+
+                $(this).attr(
+                    "title",
+                    "Show password"
+                );
+
+
+            }
+
+
+        });
+
+
+
+        /*
+         * Disable button after submit
+         */
+
+        $("#loginForm").on(
+            "submit",
+            function () {
+
+
+                let username =
+                    $("input[name='name']")
+                        .val()
+                        .trim();
+
+
+                let password =
+                    $("input[name='password']")
+                        .val()
+                        .trim();
+
+
+                /*
+                 * Let Django display
+                 * required-field errors
+                 */
+
+                if (
+                    username === ""
+                    ||
+                    password === ""
+                ) {
+
+                    return true;
+
+                }
+
+
+                $("#loginBtn")
+                    .prop(
+                        "disabled",
+                        true
+                    );
+
+
+                $("#loginBtnText")
+                    .text(
+                        "Signing in..."
+                    );
+
+
+            }
+        );
+
+
+    });
+
+</script>
+
+{% endblock %}

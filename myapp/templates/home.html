@@ -1,0 +1,1747 @@
+{% extends 'temple.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    /* =========================
+       Page
+       ========================= */
+
+    body {
+        background: #f4f7fb;
+        color: #1e293b;
+    }
+
+    .monitor-page {
+        min-height: 100vh;
+        padding: 28px 24px;
+    }
+
+    .monitor-container {
+        max-width: 1550px;
+        margin: 0 auto;
+    }
+
+
+    /* =========================
+       Header
+       ========================= */
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .page-title {
+        margin: 0;
+        color: #0f172a;
+        font-size: 29px;
+        font-weight: 750;
+    }
+
+    .page-subtitle {
+        margin-top: 6px;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .system-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        background: #ffffff;
+
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+
+        padding: 9px 15px;
+
+        font-size: 13px;
+        font-weight: 650;
+
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+
+    .status-dot {
+        width: 9px;
+        height: 9px;
+
+        border-radius: 50%;
+
+        background: #22c55e;
+
+        box-shadow:
+            0 0 0 4px rgba(34, 197, 94, 0.12);
+    }
+
+    .status-dot.offline {
+        background: #ef4444;
+
+        box-shadow:
+            0 0 0 4px rgba(239, 68, 68, 0.12);
+    }
+
+
+    /* =========================
+       Card
+       ========================= */
+
+    .monitor-card {
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 7px 25px rgba(15, 23, 42, 0.05);
+    }
+
+    .card-header-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 12px;
+
+        padding: 17px 20px;
+
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .card-title-custom {
+        margin: 0;
+
+        color: #0f172a;
+
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+
+    /* =========================
+       Video
+       ========================= */
+
+    .video-container {
+        position: relative;
+
+        width: 100%;
+
+        aspect-ratio: 16 / 9;
+
+        background: #020617;
+
+        overflow: hidden;
+    }
+
+    .video-container video {
+        display: block;
+
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+
+        background: #000000;
+    }
+
+    .video-overlay {
+        position: absolute;
+
+        top: 15px;
+        left: 15px;
+        right: 15px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        pointer-events: none;
+    }
+
+    .live-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+
+        padding: 7px 11px;
+
+        color: #ffffff;
+
+        background: rgba(15, 23, 42, 0.82);
+
+        border-radius: 8px;
+
+        font-size: 12px;
+        font-weight: 650;
+
+        backdrop-filter: blur(8px);
+    }
+
+    .live-dot {
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: #ef4444;
+
+        box-shadow:
+            0 0 0 3px rgba(239, 68, 68, 0.20);
+    }
+
+    .video-time {
+        padding: 7px 11px;
+
+        color: #ffffff;
+
+        background: rgba(15, 23, 42, 0.82);
+
+        border-radius: 8px;
+
+        font-family: monospace;
+        font-size: 12px;
+
+        backdrop-filter: blur(8px);
+    }
+
+
+    /* =========================
+       Video Controls
+       ========================= */
+
+    .player-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 12px;
+
+        flex-wrap: wrap;
+
+        padding: 14px 17px;
+
+        border-top: 1px solid #eef2f7;
+    }
+
+    .control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .control-btn {
+        padding: 8px 12px;
+
+        background: #ffffff;
+
+        border: 1px solid #dbe3ee;
+        border-radius: 9px;
+
+        color: #334155;
+
+        font-size: 12px;
+        font-weight: 600;
+
+        transition: 0.2s;
+    }
+
+    .control-btn:hover {
+        color: #2563eb;
+
+        background: #f8fafc;
+
+        border-color: #bfdbfe;
+    }
+
+    .control-btn-primary {
+        color: #ffffff;
+
+        border: none;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+    }
+
+    .control-btn-primary:hover {
+        color: #ffffff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #1d4ed8,
+                #4338ca
+            );
+    }
+
+
+    /* =========================
+       System Metrics
+       ========================= */
+
+    .metrics-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+        gap: 14px;
+
+        margin-top: 20px;
+    }
+
+    .metric-card {
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+
+        padding: 18px;
+
+        box-shadow:
+            0 5px 18px rgba(15, 23, 42, 0.04);
+    }
+
+    .metric-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 11px;
+    }
+
+    .metric-name {
+        color: #64748b;
+
+        font-size: 12px;
+        font-weight: 650;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.5px;
+    }
+
+    .metric-icon {
+        width: 34px;
+        height: 34px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        color: #2563eb;
+
+        background: #eff6ff;
+    }
+
+    .metric-value {
+        color: #0f172a;
+
+        font-size: 25px;
+        font-weight: 750;
+    }
+
+    .metric-unit {
+        margin-left: 3px;
+
+        color: #64748b;
+
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .metric-footer {
+        margin-top: 7px;
+
+        color: #94a3b8;
+
+        font-size: 11px;
+    }
+
+
+    /* =========================
+       Progress Bars
+       ========================= */
+
+    .progress-custom {
+        height: 6px;
+
+        margin-top: 12px;
+
+        background: #eef2f7;
+
+        border-radius: 20px;
+
+        overflow: hidden;
+    }
+
+    .progress-bar-custom {
+        height: 100%;
+
+        width: 0%;
+
+        border-radius: 20px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #2563eb,
+                #6366f1
+            );
+
+        transition: width 0.4s ease;
+    }
+
+
+    /* =========================
+       Device Information
+       ========================= */
+
+    .info-body {
+        padding: 7px 18px 16px;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 16px;
+
+        padding: 13px 2px;
+
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: #64748b;
+
+        font-size: 12px;
+    }
+
+    .info-value {
+        color: #0f172a;
+
+        font-size: 12px;
+        font-weight: 650;
+
+        text-align: right;
+    }
+
+    .online-text {
+        color: #16a34a;
+    }
+
+    .offline-text {
+        color: #dc2626;
+    }
+
+
+    /* =========================
+       Network
+       ========================= */
+
+    .network-grid {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 12px;
+
+        padding: 17px;
+    }
+
+    .network-box {
+        padding: 15px;
+
+        background: #f8fafc;
+
+        border: 1px solid #eef2f7;
+        border-radius: 12px;
+    }
+
+    .network-title {
+        color: #64748b;
+
+        font-size: 11px;
+
+        margin-bottom: 6px;
+    }
+
+    .network-value {
+        color: #0f172a;
+
+        font-size: 17px;
+        font-weight: 720;
+    }
+
+
+    /* =========================
+       Camera List
+       ========================= */
+
+    .camera-list {
+        padding: 10px;
+    }
+
+    .camera-item {
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+
+        padding: 12px;
+
+        border-radius: 11px;
+
+        cursor: pointer;
+
+        transition: 0.2s;
+    }
+
+    .camera-item:hover {
+        background: #f8fafc;
+    }
+
+    .camera-item.active {
+        background: #eff6ff;
+    }
+
+    .camera-icon {
+        width: 37px;
+        height: 37px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        color: #4f46e5;
+
+        background: #e0e7ff;
+    }
+
+    .camera-info {
+        flex: 1;
+    }
+
+    .camera-name {
+        color: #1e293b;
+
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+    .camera-location {
+        margin-top: 2px;
+
+        color: #94a3b8;
+
+        font-size: 11px;
+    }
+
+    .camera-online {
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: #22c55e;
+    }
+
+
+    /* =========================
+       Responsive
+       ========================= */
+
+    @media (max-width: 1199px) {
+
+        .metrics-grid {
+            grid-template-columns:
+                repeat(2, 1fr);
+        }
+
+    }
+
+
+    @media (max-width: 767px) {
+
+        .monitor-page {
+            padding: 18px 12px;
+        }
+
+        .metrics-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .page-title {
+            font-size: 24px;
+        }
+
+    }
+
+</style>
+
+
+<div class="monitor-page">
+
+    <div class="monitor-container">
+
+
+        <!-- =========================
+             Header
+             ========================= -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Embedded Device Monitoring
+                </h1>
+
+                <div class="page-subtitle">
+                    Real-time video stream and i.MX6ULL system status
+                </div>
+
+            </div>
+
+
+            <div class="system-status">
+
+                <span
+                    class="status-dot"
+                    id="deviceStatusDot">
+                </span>
+
+                <span id="deviceStatusText">
+                    Device Online
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="row g-4">
+
+
+            <!-- =========================
+                 Left Main Area
+                 ========================= -->
+
+            <div class="col-xl-9 col-lg-8">
+
+
+                <!-- =========================
+                     Video Player
+                     ========================= -->
+
+                <div class="monitor-card">
+
+
+                    <div class="card-header-custom">
+
+                        <h2 class="card-title-custom">
+                            Live Camera
+                        </h2>
+
+
+                        <span
+                            class="badge bg-success"
+                            id="streamStatus">
+
+                            Streaming
+
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="video-container">
+
+
+                        <video
+                            id="videoPlayer"
+                            autoplay
+                            muted
+                            controls
+                            playsinline>
+
+                        </video>
+
+
+                        <div class="video-overlay">
+
+
+                            <div class="live-label">
+
+                                <span class="live-dot"></span>
+
+                                LIVE
+
+                            </div>
+
+
+                            <div
+                                class="video-time"
+                                id="currentTime">
+
+                                ---- -- -- --:--:--
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="player-controls">
+
+
+                        <div class="control-group">
+
+
+                            <button
+                                class="control-btn control-btn-primary"
+                                id="playBtn">
+
+                                Play
+
+                            </button>
+
+
+                            <button
+                                class="control-btn"
+                                id="pauseBtn">
+
+                                Pause
+
+                            </button>
+
+
+                            <button
+                                class="control-btn"
+                                id="muteBtn">
+
+                                Unmute
+
+                            </button>
+
+
+                        </div>
+
+
+                        <div class="control-group">
+
+
+                            <button
+                                class="control-btn"
+                                id="refreshBtn">
+
+                                Refresh Stream
+
+                            </button>
+
+
+                            <button
+                                class="control-btn"
+                                id="fullscreenBtn">
+
+                                Fullscreen
+
+                            </button>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =========================
+                     Real-time System Metrics
+                     ========================= -->
+
+                <div class="metrics-grid">
+
+
+                    <!-- CPU -->
+
+                    <div class="metric-card">
+
+                        <div class="metric-top">
+
+                            <div class="metric-name">
+                                CPU Usage
+                            </div>
+
+                            <div class="metric-icon">
+                                CPU
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <span
+                                class="metric-value"
+                                id="cpuUsage">
+
+                                0
+
+                            </span>
+
+                            <span class="metric-unit">
+                                %
+                            </span>
+
+                        </div>
+
+
+                        <div class="progress-custom">
+
+                            <div
+                                class="progress-bar-custom"
+                                id="cpuProgress">
+                            </div>
+
+                        </div>
+
+
+                        <div class="metric-footer">
+                            Processor utilization
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Temperature -->
+
+                    <div class="metric-card">
+
+                        <div class="metric-top">
+
+                            <div class="metric-name">
+                                CPU Temperature
+                            </div>
+
+                            <div class="metric-icon">
+                                °C
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <span
+                                class="metric-value"
+                                id="cpuTemp">
+
+                                0
+
+                            </span>
+
+                            <span class="metric-unit">
+                                °C
+                            </span>
+
+                        </div>
+
+
+                        <div class="metric-footer">
+                            Current SoC temperature
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Memory -->
+
+                    <div class="metric-card">
+
+                        <div class="metric-top">
+
+                            <div class="metric-name">
+                                Memory Usage
+                            </div>
+
+                            <div class="metric-icon">
+                                RAM
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <span
+                                class="metric-value"
+                                id="memoryUsage">
+
+                                0
+
+                            </span>
+
+                            <span class="metric-unit">
+                                %
+                            </span>
+
+                        </div>
+
+
+                        <div class="progress-custom">
+
+                            <div
+                                class="progress-bar-custom"
+                                id="memoryProgress">
+                            </div>
+
+                        </div>
+
+
+                        <div class="metric-footer">
+                            System memory utilization
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- FPS -->
+
+                    <div class="metric-card">
+
+                        <div class="metric-top">
+
+                            <div class="metric-name">
+                                Camera FPS
+                            </div>
+
+                            <div class="metric-icon">
+                                FPS
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <span
+                                class="metric-value"
+                                id="fps">
+
+                                0
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="metric-footer">
+                            Current frame rate
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================
+                 Right Sidebar
+                 ========================= -->
+
+            <div class="col-xl-3 col-lg-4">
+
+
+                <!-- Device Information -->
+
+                <div class="monitor-card mb-4">
+
+
+                    <div class="card-header-custom">
+
+                        <h2 class="card-title-custom">
+                            Device Information
+                        </h2>
+
+                    </div>
+
+
+                    <div class="info-body">
+
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                Device
+                            </span>
+
+                            <span class="info-value">
+                                i.MX6ULL
+                            </span>
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                Device ID
+                            </span>
+
+                            <span
+                                class="info-value"
+                                id="deviceId">
+
+                                IMX6ULL-001
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                IP Address
+                            </span>
+
+                            <span
+                                class="info-value"
+                                id="deviceIp">
+
+                                ---
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                Uptime
+                            </span>
+
+                            <span
+                                class="info-value"
+                                id="uptime">
+
+                                ---
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                Resolution
+                            </span>
+
+                            <span class="info-value">
+                                800 × 480
+                            </span>
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                Protocol
+                            </span>
+
+                            <span class="info-value">
+                                RTMP / HLS
+                            </span>
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                Status
+                            </span>
+
+                            <span
+                                class="info-value online-text"
+                                id="deviceStatus">
+
+                                Online
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- Stream Information -->
+
+                <div class="monitor-card mb-4">
+
+
+                    <div class="card-header-custom">
+
+                        <h2 class="card-title-custom">
+                            Stream Statistics
+                        </h2>
+
+                    </div>
+
+
+                    <div class="network-grid">
+
+
+                        <div class="network-box">
+
+                            <div class="network-title">
+                                Bitrate
+                            </div>
+
+                            <div class="network-value">
+
+                                <span id="bitrate">
+                                    0
+                                </span>
+
+                                Kbps
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="network-box">
+
+                            <div class="network-title">
+                                FPS
+                            </div>
+
+                            <div
+                                class="network-value"
+                                id="streamFps">
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- Network Information -->
+
+                <div class="monitor-card mb-4">
+
+
+                    <div class="card-header-custom">
+
+                        <h2 class="card-title-custom">
+                            Network
+                        </h2>
+
+                    </div>
+
+
+                    <div class="network-grid">
+
+
+                        <div class="network-box">
+
+                            <div class="network-title">
+                                Download
+                            </div>
+
+                            <div class="network-value">
+
+                                <span id="networkRx">
+                                    0
+                                </span>
+
+                                KB/s
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="network-box">
+
+                            <div class="network-title">
+                                Upload
+                            </div>
+
+                            <div class="network-value">
+
+                                <span id="networkTx">
+                                    0
+                                </span>
+
+                                KB/s
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- Camera List -->
+
+                <div class="monitor-card">
+
+
+                    <div class="card-header-custom">
+
+                        <h2 class="card-title-custom">
+                            Cameras
+                        </h2>
+
+                    </div>
+
+
+                    <div class="camera-list">
+
+
+                        <div
+                            class="camera-item active"
+                            data-camera="cam1">
+
+
+                            <div class="camera-icon">
+                                CAM
+                            </div>
+
+
+                            <div class="camera-info">
+
+                                <div class="camera-name">
+                                    Camera 01
+                                </div>
+
+                                <div class="camera-location">
+                                    i.MX6ULL Main Camera
+                                </div>
+
+                            </div>
+
+
+                            <span class="camera-online"></span>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+
+{% block javascript %}
+
+<script>
+
+    $(function () {
+
+
+        const video =
+            document.getElementById(
+                "videoPlayer"
+            );
+
+
+        /* =====================================
+           Current Time
+           ===================================== */
+
+        function updateTime() {
+
+            const now = new Date();
+
+
+            const year =
+                now.getFullYear();
+
+
+            const month =
+                String(
+                    now.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            const day =
+                String(
+                    now.getDate()
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            const hour =
+                String(
+                    now.getHours()
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            const minute =
+                String(
+                    now.getMinutes()
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            const second =
+                String(
+                    now.getSeconds()
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            $("#currentTime").text(
+
+                year + "-" +
+                month + "-" +
+                day + " " +
+                hour + ":" +
+                minute + ":" +
+                second
+
+            );
+
+        }
+
+
+        updateTime();
+
+
+        setInterval(
+            updateTime,
+            1000
+        );
+
+
+
+        /* =====================================
+           Player Buttons
+           ===================================== */
+
+
+        $("#playBtn").click(function () {
+
+            video.play();
+
+        });
+
+
+        $("#pauseBtn").click(function () {
+
+            video.pause();
+
+        });
+
+
+        $("#muteBtn").click(function () {
+
+
+            video.muted =
+                !video.muted;
+
+
+            if (video.muted) {
+
+                $(this).text(
+                    "Unmute"
+                );
+
+            } else {
+
+                $(this).text(
+                    "Mute"
+                );
+
+            }
+
+        });
+
+
+        $("#refreshBtn").click(function () {
+
+            video.load();
+
+            video.play();
+
+        });
+
+
+        $("#fullscreenBtn").click(function () {
+
+            if (
+                video.requestFullscreen
+            ) {
+
+                video.requestFullscreen();
+
+            }
+
+        });
+
+
+
+        /* =====================================
+           Device Status AJAX
+           ===================================== */
+
+        function getDeviceStatus() {
+
+
+            $.ajax({
+
+
+                url:
+                    "/api/device/status/",
+
+
+                type:
+                    "GET",
+
+
+                dataType:
+                    "json",
+
+
+                success:
+                    function (data) {
+
+
+                        /* CPU */
+
+                        $("#cpuUsage")
+                            .text(
+                                data.cpu_usage
+                            );
+
+
+                        $("#cpuProgress")
+                            .css(
+                                "width",
+                                data.cpu_usage + "%"
+                            );
+
+
+
+                        /* Temperature */
+
+                        $("#cpuTemp")
+                            .text(
+                                data.cpu_temp
+                            );
+
+
+
+                        /* Memory */
+
+                        $("#memoryUsage")
+                            .text(
+                                data.memory_usage
+                            );
+
+
+                        $("#memoryProgress")
+                            .css(
+                                "width",
+                                data.memory_usage + "%"
+                            );
+
+
+
+                        /* Camera */
+
+                        $("#fps")
+                            .text(
+                                data.fps
+                            );
+
+
+                        $("#streamFps")
+                            .text(
+                                data.fps
+                            );
+
+
+                        $("#bitrate")
+                            .text(
+                                data.bitrate
+                            );
+
+
+
+                        /* Network */
+
+                        $("#networkRx")
+                            .text(
+                                data.network_rx
+                            );
+
+
+                        $("#networkTx")
+                            .text(
+                                data.network_tx
+                            );
+
+
+
+                        /* Device Information */
+
+                        $("#deviceId")
+                            .text(
+                                data.device_id
+                            );
+
+
+                        $("#deviceIp")
+                            .text(
+                                data.ip
+                            );
+
+
+                        $("#uptime")
+                            .text(
+                                data.uptime
+                            );
+
+
+
+                        /* Online Status */
+
+                        if (
+                            data.online === true
+                        ) {
+
+
+                            $("#deviceStatus")
+                                .text(
+                                    "Online"
+                                )
+                                .removeClass(
+                                    "offline-text"
+                                )
+                                .addClass(
+                                    "online-text"
+                                );
+
+
+                            $("#deviceStatusText")
+                                .text(
+                                    "Device Online"
+                                );
+
+
+                            $("#deviceStatusDot")
+                                .removeClass(
+                                    "offline"
+                                );
+
+
+                            $("#streamStatus")
+                                .text(
+                                    "Streaming"
+                                )
+                                .removeClass(
+                                    "bg-danger"
+                                )
+                                .addClass(
+                                    "bg-success"
+                                );
+
+
+                        } else {
+
+
+                            setDeviceOffline();
+
+
+                        }
+
+
+                    },
+
+
+                error:
+                    function () {
+
+
+                        /*
+                         * Django API cannot be reached.
+                         * Treat the device as offline.
+                         */
+
+                        setDeviceOffline();
+
+
+                    }
+
+
+            });
+
+
+        }
+
+
+
+        /* =====================================
+           Offline State
+           ===================================== */
+
+        function setDeviceOffline() {
+
+
+            $("#deviceStatus")
+                .text(
+                    "Offline"
+                )
+                .removeClass(
+                    "online-text"
+                )
+                .addClass(
+                    "offline-text"
+                );
+
+
+            $("#deviceStatusText")
+                .text(
+                    "Device Offline"
+                );
+
+
+            $("#deviceStatusDot")
+                .addClass(
+                    "offline"
+                );
+
+
+            $("#streamStatus")
+                .text(
+                    "Offline"
+                )
+                .removeClass(
+                    "bg-success"
+                )
+                .addClass(
+                    "bg-danger"
+                );
+
+
+        }
+
+
+
+        /* =====================================
+           Get status immediately
+           ===================================== */
+
+        getDeviceStatus();
+
+
+
+        /* =====================================
+           Refresh device information
+           every second
+           ===================================== */
+
+        setInterval(
+            getDeviceStatus,
+            1000
+        );
+
+
+    });
+
+</script>
+
+{% endblock %}
