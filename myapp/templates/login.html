@@ -12,6 +12,7 @@
 
     body {
         margin: 0;
+
         background:
             radial-gradient(
                 circle at top left,
@@ -25,6 +26,7 @@
             );
 
         min-height: 100vh;
+
         color: #0f172a;
     }
 
@@ -38,7 +40,6 @@
         justify-content: center;
 
         padding: 30px 20px;
-
     }
 
 
@@ -61,7 +62,6 @@
 
         box-shadow:
             0 20px 50px rgba(15, 23, 42, 0.08);
-
     }
 
 
@@ -74,7 +74,6 @@
         text-align: center;
 
         margin-bottom: 34px;
-
     }
 
 
@@ -102,7 +101,6 @@
 
         box-shadow:
             0 8px 20px rgba(37, 99, 235, 0.25);
-
     }
 
 
@@ -110,7 +108,6 @@
 
         width: 27px;
         height: 27px;
-
     }
 
 
@@ -124,7 +121,6 @@
         color: #0f172a;
 
         letter-spacing: -0.4px;
-
     }
 
 
@@ -137,7 +133,6 @@
         font-size: 13px;
 
         line-height: 1.6;
-
     }
 
 
@@ -148,7 +143,6 @@
     .form-group-custom {
 
         margin-bottom: 20px;
-
     }
 
 
@@ -162,14 +156,12 @@
 
         font-size: 13px;
         font-weight: 650;
-
     }
 
 
     .input-wrapper {
 
         position: relative;
-
     }
 
 
@@ -187,7 +179,6 @@
         pointer-events: none;
 
         z-index: 2;
-
     }
 
 
@@ -195,7 +186,6 @@
 
         width: 18px;
         height: 18px;
-
     }
 
 
@@ -209,11 +199,9 @@
         width: 100%;
         height: 50px;
 
-        padding:
-            0 45px 0 45px;
+        padding: 0 45px 0 45px;
 
-        border:
-            1px solid #dbe3ee;
+        border: 1px solid #dbe3ee;
 
         border-radius: 12px;
 
@@ -225,18 +213,18 @@
 
         outline: none;
 
+        box-sizing: border-box;
+
         transition:
             border-color 0.2s,
             background 0.2s,
             box-shadow 0.2s;
-
     }
 
 
     .login-card input::placeholder {
 
         color: #94a3b8;
-
     }
 
 
@@ -245,7 +233,6 @@
         background: #ffffff;
 
         border-color: #cbd5e1;
-
     }
 
 
@@ -257,7 +244,6 @@
 
         box-shadow:
             0 0 0 3px rgba(59, 130, 246, 0.10);
-
     }
 
 
@@ -283,14 +269,12 @@
         padding: 4px;
 
         cursor: pointer;
-
     }
 
 
     .password-toggle:hover {
 
         color: #2563eb;
-
     }
 
 
@@ -298,7 +282,6 @@
 
         width: 18px;
         height: 18px;
-
     }
 
 
@@ -313,11 +296,9 @@
         justify-content: space-between;
         align-items: center;
 
-        margin:
-            2px 0 24px;
+        margin: 2px 0 24px;
 
         font-size: 12px;
-
     }
 
 
@@ -331,7 +312,6 @@
         color: #64748b;
 
         cursor: pointer;
-
     }
 
 
@@ -341,7 +321,6 @@
         height: 15px;
 
         cursor: pointer;
-
     }
 
 
@@ -377,25 +356,22 @@
             transform 0.2s,
             box-shadow 0.2s;
 
+        cursor: pointer;
     }
 
 
     .login-btn:hover {
 
-        transform:
-            translateY(-1px);
+        transform: translateY(-1px);
 
         box-shadow:
             0 10px 24px rgba(37, 99, 235, 0.26);
-
     }
 
 
     .login-btn:active {
 
-        transform:
-            translateY(0);
-
+        transform: translateY(0);
     }
 
 
@@ -404,7 +380,6 @@
         opacity: 0.7;
 
         cursor: not-allowed;
-
     }
 
 
@@ -420,15 +395,13 @@
 
         background: #fef2f2;
 
-        border:
-            1px solid #fecaca;
+        border: 1px solid #fecaca;
 
         border-radius: 10px;
 
         color: #b91c1c;
 
         font-size: 12px;
-
     }
 
 
@@ -439,7 +412,6 @@
         color: #dc2626;
 
         font-size: 11px;
-
     }
 
 
@@ -461,7 +433,6 @@
         color: #94a3b8;
 
         font-size: 11px;
-
     }
 
 
@@ -473,7 +444,6 @@
         border-radius: 50%;
 
         background: #22c55e;
-
     }
 
 
@@ -486,7 +456,6 @@
         .login-page {
 
             padding: 20px 14px;
-
         }
 
 
@@ -495,20 +464,17 @@
             padding: 35px 24px;
 
             border-radius: 17px;
-
         }
 
 
         .brand-title {
 
             font-size: 22px;
-
         }
 
     }
 
 </style>
-
 
 
 <div class="login-page">
@@ -551,7 +517,6 @@
         </div>
 
 
-
         <!-- =========================
              Django Form Errors
              ========================= -->
@@ -571,7 +536,6 @@
         {% endif %}
 
 
-
         <!-- =========================
              Login Form
              ========================= -->
@@ -585,14 +549,17 @@
             {% csrf_token %}
 
 
-
             <!-- Username -->
 
             <div class="form-group-custom">
 
 
-                <label class="form-label-custom">
+                <label
+                    class="form-label-custom"
+                    for="id_username">
+
                     Username
+
                 </label>
 
 
@@ -620,12 +587,14 @@
                 </div>
 
 
-                {% if form.name.errors %}
+                {% if form.username.errors %}
 
-                    {% for error in form.name.errors %}
+                    {% for error in form.username.errors %}
 
                         <div class="field-error">
+
                             {{ error }}
+
                         </div>
 
                     {% endfor %}
@@ -636,14 +605,17 @@
             </div>
 
 
-
             <!-- Password -->
 
             <div class="form-group-custom">
 
 
-                <label class="form-label-custom">
+                <label
+                    class="form-label-custom"
+                    for="id_password">
+
                     Password
+
                 </label>
 
 
@@ -698,7 +670,9 @@
                     {% for error in form.password.errors %}
 
                         <div class="field-error">
+
                             {{ error }}
+
                         </div>
 
                     {% endfor %}
@@ -707,7 +681,6 @@
 
 
             </div>
-
 
 
             <!-- Options -->
@@ -736,7 +709,6 @@
             </div>
 
 
-
             <!-- Sign In -->
 
             <button
@@ -752,7 +724,6 @@
 
 
         </form>
-
 
 
         <!-- =========================
@@ -775,7 +746,6 @@
 {% endblock %}
 
 
-
 {% block javascript %}
 
 <script>
@@ -787,78 +757,68 @@
          * Add placeholders
          */
 
-        $("input[name='name']")
-            .attr(
-                "placeholder",
-                "Enter your username"
-            );
+        $("input[name='username']").attr(
+            "placeholder",
+            "Enter your username"
+        );
 
 
-        $("input[name='password']")
-            .attr(
-                "placeholder",
-                "Enter your password"
-            );
+        $("input[name='password']").attr(
+            "placeholder",
+            "Enter your password"
+        );
 
 
         /*
          * Focus username input
          */
 
-        $("input[name='name']")
-            .focus();
-
+        $("input[name='username']").focus();
 
 
         /*
          * Show / Hide password
          */
 
-        $("#togglePassword").click(function () {
+        $("#togglePassword").on(
+            "click",
+            function () {
+
+                const passwordInput =
+                    $("#id_password");
 
 
-            let passwordInput =
-                $("input[name='password']");
+                if (
+                    passwordInput.attr("type")
+                    === "password"
+                ) {
 
+                    passwordInput.attr(
+                        "type",
+                        "text"
+                    );
 
-            if (
-                passwordInput.attr("type")
-                === "password"
-            ) {
+                    $(this).attr(
+                        "title",
+                        "Hide password"
+                    );
 
+                } else {
 
-                passwordInput.attr(
-                    "type",
-                    "text"
-                );
+                    passwordInput.attr(
+                        "type",
+                        "password"
+                    );
 
+                    $(this).attr(
+                        "title",
+                        "Show password"
+                    );
 
-                $(this).attr(
-                    "title",
-                    "Hide password"
-                );
-
-
-            } else {
-
-
-                passwordInput.attr(
-                    "type",
-                    "password"
-                );
-
-
-                $(this).attr(
-                    "title",
-                    "Show password"
-                );
-
+                }
 
             }
-
-
-        });
-
+        );
 
 
         /*
@@ -871,7 +831,7 @@
 
 
                 let username =
-                    $("input[name='name']")
+                    $("input[name='username']")
                         .val()
                         .trim();
 
@@ -898,17 +858,15 @@
                 }
 
 
-                $("#loginBtn")
-                    .prop(
-                        "disabled",
-                        true
-                    );
+                $("#loginBtn").prop(
+                    "disabled",
+                    true
+                );
 
 
-                $("#loginBtnText")
-                    .text(
-                        "Signing in..."
-                    );
+                $("#loginBtnText").text(
+                    "Signing in..."
+                );
 
 
             }
